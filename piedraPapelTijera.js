@@ -2,6 +2,55 @@
 var posibilidades = ["piedra", "papel", "tijera"];
 //    //
 
+var jugarBotton = document.getElementsByTagName("button")[0];
+var jugador = document.getElementsByTagName("input")[0];
+var jugadorInput = "";
+var partidas = document.getElementsByTagName("input")[1];
+var partidasInput = 0;
+var prueba = true;
+
+jugarBotton.addEventListener("click", function () {
+  jugadorInput = jugador.value;
+  partidasInput = partidas.value;
+  comprobarJugador(jugadorInput);
+  comprobarPartidas(partidasInput);
+  if (
+    jugador.classList.contains("fondoRojo") ||
+    partidas.classList.contains("fondoRojo")
+  ) {
+    prueba = false;
+  } else {
+    document.getElementById("total").innerHTML = partidasInput;
+    prueba = true;
+  }
+
+  //cambiar el interior de id total por partidasInput
+});
+
+function comprobarJugador(player) {
+  if (player.length <= 3 || !isNaN(player[0])) {
+    jugador.classList.add("fondoRojo");
+    console.log("Nombre no valido");
+  } else {
+    console.log("Bienvenido " + player);
+    jugador.classList.remove("fondoRojo");
+    jugador.readOnly = true;
+  }
+}
+
+function comprobarPartidas(jugadas) {
+  if (jugadas <= 0) {
+    partidas.classList.add("fondoRojo");
+    console.log("Numero de partidas no valido");
+  } else {
+    partidas.classList.remove("fondoRojo");
+    console.log("Partidas validas");
+    partidas.readOnly = true;
+  }
+}
+
+//-----------------------------------------------------;
+
 //-----------------------------------------------------;
 //Declaracion de variables globales
 
@@ -65,15 +114,31 @@ tijera.addEventListener("click", () => {
   papel.classList.add("noSeleccionado");
   piedra.classList.remove("seleccionado");
   piedra.classList.add("noSeleccionado");
-  
+
   opcion = posibilidades[2];
 });
 
 //Boton de ¡YA!
 inicio.addEventListener("click", () => {
-  const user = play(opcion);//imagen del jugador
-  const pc = imgOrdenador();//imagen de la maquina
-  calcResult(user, pc);
+  if (prueba === true) {
+    // id acutal += 1
+
+    let id = document.getElementById("actual").innerHTML;
+    id = parseInt(id);
+
+    if (id < partidasInput) {
+      id += 1;
+      document.getElementById("actual").innerHTML = id;
+
+      const user = play(opcion); //imagen del jugador
+      const pc = imgOrdenador(); //imagen de la maquina
+      calcResult(user, pc);
+    } else {
+      console.log("No hay mas partidas");
+    }
+  } else {
+    console.log("No se puede jugar");
+  }
 });
 
 reset.addEventListener("click", () => {
@@ -83,7 +148,6 @@ reset.addEventListener("click", () => {
 
 //opciones elegida por jugador
 function play(userOption) {
-  
   if (userOption === posibilidades[0]) {
     return posibilidades[0];
   }
@@ -112,14 +176,12 @@ function imgOrdenador() {
     document.getElementsByTagName("img")[3].src = tijeraMaquina;
   }
   return computerOption;
-
 }
 
 //-----------------------------------------------------;
 
 //calcular resultado
 function calcResult(userOption, computerOption) {
-
   if (userOption === computerOption) {
     console.log("Empate");
   } else if (
@@ -144,5 +206,9 @@ function resetButton() {
   tijera.classList.add("noSeleccionado");
   document.getElementsByTagName("img")[3].src = "/img/defecto.png";
   opcion = "";
+  partidasInput = 0;
+  partidas.value = 0;
+  partidas.readOnly = false;
+  document.getElementById("total").innerHTML = partidasInput;
+  document.getElementById("actual").innerHTML = partidasInput;
 }
-
