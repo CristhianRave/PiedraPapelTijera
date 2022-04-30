@@ -14,6 +14,7 @@ jugarBotton.addEventListener("click", function () {
   partidasInput = partidas.value;
   comprobarJugador(jugadorInput);
   comprobarPartidas(partidasInput);
+
   if (
     jugador.classList.contains("fondoRojo") ||
     partidas.classList.contains("fondoRojo")
@@ -28,11 +29,9 @@ jugarBotton.addEventListener("click", function () {
 });
 
 function comprobarJugador(player) {
-  if (player.length <= 3 || !isNaN(player[0])) {
+  if (player.length <= 3 || !isNaN(player[0]) || player === "") {
     jugador.classList.add("fondoRojo");
-    console.log("Nombre no valido");
   } else {
-    console.log("Bienvenido " + player);
     jugador.classList.remove("fondoRojo");
     jugador.readOnly = true;
   }
@@ -41,10 +40,8 @@ function comprobarJugador(player) {
 function comprobarPartidas(jugadas) {
   if (jugadas <= 0) {
     partidas.classList.add("fondoRojo");
-    console.log("Numero de partidas no valido");
   } else {
     partidas.classList.remove("fondoRojo");
-    console.log("Partidas validas");
     partidas.readOnly = true;
   }
 }
@@ -133,11 +130,7 @@ inicio.addEventListener("click", () => {
       const user = play(opcion); //imagen del jugador
       const pc = imgOrdenador(); //imagen de la maquina
       calcResult(user, pc);
-    } else {
-      console.log("No hay mas partidas");
     }
-  } else {
-    console.log("No se puede jugar");
   }
 });
 
@@ -183,15 +176,17 @@ function imgOrdenador() {
 //calcular resultado
 function calcResult(userOption, computerOption) {
   if (userOption === computerOption) {
-    console.log("Empate");
+    document.getElementById("historial").innerHTML += "<li>Empate</li>";
   } else if (
     (userOption === posibilidades[0] && computerOption === posibilidades[2]) ||
     (userOption === posibilidades[1] && computerOption === posibilidades[0]) ||
     (userOption === posibilidades[2] && computerOption === posibilidades[1])
   ) {
-    console.log("Ganaste");
+    document.getElementById("historial").innerHTML +=
+      "<li>Gana " + jugadorInput + "</li>";
   } else {
-    console.log("Perdiste");
+    document.getElementById("historial").innerHTML +=
+      "<li>Gana la máquina</li>";
   }
 }
 
@@ -209,6 +204,8 @@ function resetButton() {
   partidasInput = 0;
   partidas.value = 0;
   partidas.readOnly = false;
+  jugador.readOnly = false;
   document.getElementById("total").innerHTML = partidasInput;
   document.getElementById("actual").innerHTML = partidasInput;
+  document.getElementById("historial").innerHTML += "<li>Nueva partida</li>";
 }
