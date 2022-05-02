@@ -6,6 +6,25 @@ var jugarBotton = document.getElementsByTagName("button")[0];
 var jugador = document.getElementsByTagName("input")[0];
 var jugadorInput = "";
 var partidas = document.getElementsByTagName("input")[1];
+//-----------------------------------------------------;
+
+//imagenes jugador
+const piedraJugador = (document.getElementsByTagName("img")[0].src =
+  "/img/piedraJugador.png");
+const piedra = document.getElementsByTagName("img")[0];
+
+const papelJugador = (document.getElementsByTagName("img")[1].src =
+  "/img/papelJugador.png");
+const papel = document.getElementsByTagName("img")[1];
+
+const tijeraJugador = (document.getElementsByTagName("img")[2].src =
+  "/img/tijeraJugador.png");
+const tijera = document.getElementsByTagName("img")[2];
+
+//-----------------------------------------------------;
+var opcion = "";
+const inicio = document.getElementsByTagName("button")[1];
+const reset = document.getElementsByTagName("button")[2];
 var partidasInput = 0;
 var prueba = true;
 
@@ -46,41 +65,14 @@ function comprobarPartidas(jugadas) {
   }
 }
 
-//-----------------------------------------------------;
-
-//-----------------------------------------------------;
-//Declaracion de variables globales
-
-//imagenes ordenador
-var piedraMaquina = "/img/piedraOrdenador.png";
-var papelMaquina = "/img/papelOrdenador.png";
-var tijeraMaquina = "/img/tijeraOrdenador.png";
-
-//-----------------------------------------------------;
-
-//imagenes jugador
-const piedraJugador = (document.getElementsByTagName("img")[0].src =
-  "/img/piedraJugador.png");
-const piedra = document.getElementsByTagName("img")[0];
-
-const papelJugador = (document.getElementsByTagName("img")[1].src =
-  "/img/papelJugador.png");
-const papel = document.getElementsByTagName("img")[1];
-
-const tijeraJugador = (document.getElementsByTagName("img")[2].src =
-  "/img/tijeraJugador.png");
-const tijera = document.getElementsByTagName("img")[2];
-
-//-----------------------------------------------------;
-var opcion = "";
-const inicio = document.getElementsByTagName("button")[1];
-const reset = document.getElementsByTagName("button")[2];
 
 //-----------------------------------------------------;
 
 //Acciones de los botones
 
 //asignamos clase seleccionado y quitamos noSeleccionado
+
+
 piedra.addEventListener("click", () => {
   piedra.classList.remove("noSeleccionado");
   piedra.classList.add("seleccionado");
@@ -93,7 +85,6 @@ piedra.addEventListener("click", () => {
 });
 
 papel.addEventListener("click", () => {
-  //asignar la clase ("seleccionado");
   papel.classList.remove("noSeleccionado");
   papel.classList.add("seleccionado");
   piedra.classList.remove("seleccionado");
@@ -117,9 +108,7 @@ tijera.addEventListener("click", () => {
 
 //Boton de ¡YA!
 inicio.addEventListener("click", () => {
-  if (prueba === true) {
-    // id acutal += 1
-
+  if (prueba) {
     let id = document.getElementById("actual").innerHTML;
     id = parseInt(id);
 
@@ -141,17 +130,13 @@ reset.addEventListener("click", () => {
 
 //opciones elegida por jugador
 function play(userOption) {
-  if (userOption === posibilidades[0]) {
-    return posibilidades[0];
-  }
-  if (userOption === posibilidades[1]) {
-    return posibilidades[1];
-  }
-  if (userOption === posibilidades[2]) {
-    return posibilidades[2];
+  for (let i = 0; i < posibilidades.length; i++) {
+    const element = posibilidades[i];
+    if (userOption === element) {
+      return element;
+    }
   }
 }
-
 //-----------------------------------------------------;
 
 //asignar imagenes a maquina
@@ -159,14 +144,13 @@ function imgOrdenador() {
   var computerOption =
     posibilidades[Math.floor(Math.random() * posibilidades.length)];
 
-  if (computerOption === posibilidades[0]) {
-    document.getElementsByTagName("img")[3].src = piedraMaquina;
-  }
-  if (computerOption === posibilidades[1]) {
-    document.getElementsByTagName("img")[3].src = papelMaquina;
-  }
-  if (computerOption === posibilidades[2]) {
-    document.getElementsByTagName("img")[3].src = tijeraMaquina;
+  for (let i = 0; i < posibilidades.length; i++) {
+    const element = posibilidades[i];
+
+    if (computerOption === element) {
+      document.getElementsByTagName("img")[3].src =
+        "/img/" + computerOption + "Ordenador.png";
+    }
   }
   return computerOption;
 }
@@ -174,19 +158,28 @@ function imgOrdenador() {
 //-----------------------------------------------------;
 
 //calcular resultado
+
 function calcResult(userOption, computerOption) {
-  if (userOption === computerOption) {
-    document.getElementById("historial").innerHTML += "<li>Empate</li>";
-  } else if (
-    (userOption === posibilidades[0] && computerOption === posibilidades[2]) ||
-    (userOption === posibilidades[1] && computerOption === posibilidades[0]) ||
-    (userOption === posibilidades[2] && computerOption === posibilidades[1])
-  ) {
-    document.getElementById("historial").innerHTML +=
-      "<li>Gana " + jugadorInput + "</li>";
-  } else {
-    document.getElementById("historial").innerHTML +=
-      "<li>Gana la máquina</li>";
+  for (let i = 0; i < posibilidades.length; i++) {
+    const element = posibilidades[i];
+
+    if (userOption === element && computerOption === element) {
+      document.getElementById("historial").innerHTML += "<li>Empate</li>";
+    } else if (
+      userOption === element &&
+      computerOption === posibilidades[i - 1] 
+    ) {
+      document.getElementById("historial").innerHTML +=
+        "<li>Gana " + jugadorInput + "</li>";
+    }
+    //comprobar no salirse de rango
+    else if (
+      userOption === element &&
+      computerOption === posibilidades[i + 1]
+    ) {
+      document.getElementById("historial").innerHTML +=
+        "<li>Gana la máquina</li>";
+    }
   }
 }
 
